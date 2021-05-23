@@ -1,0 +1,82 @@
+---
+title: "assessment1.2"
+author: "Kevin Lukose 4629418"
+date: "22/05/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+- The title of your document should be Assessment 1.2
+- The Author is your name and student id
+- The date is the date you created he document
+
+You will need to answer each task using the text/graph narration and include R chunks to show how you get them.
+
+2. Create the heading of the first level and call it Data wrangling
+
+3. Insert an R chunk and create a variable with this dataset
+https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2018/2018-09-04/fastfood_calories.csv
+
+The name of the variable should be `fastfood`
+
+Display the types of variables in the dataset using `skimr` package
+
+4. Show the number of observations for each restaurant.
+
+5. Calculate and display the average number of calories for each restaurant.
+
+6. Add a variable to the dataset, which calculates the average calories per type of restaurant and call it `average_calories` 
+
+7. Display the data vis of total fat per each type of restaurant. Write a narration (2-3 sentences) why you believe this type of data viz presents such information best. **
+
+8. Display the count of observations per each type of restaurant
+
+9. Add a variable to the dataset, which calculates the maximum total fat per type of restaurant and call it `max_total_fat` 
+
+10. Use observations for Mcdonalds to plot sugar variable against protein with `geom_point()` 
+
+- Save your .rmd file 
+
+- Do a commit in Git tab
+
+- Push in the same tab
+
+# Data Wrangling
+
+```{r, echo=TRUE}
+library(tidyverse)
+library(skimr)
+
+fastfood <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2018/2018-09-04/fastfood_calories.csv")
+
+head(fastfood)
+
+skim(fastfood)
+
+fastfood1 <- fastfood %>% group_by(restaurant) %>% summarise(`nofobservations`=n())
+
+fastfood %>% group_by(restaurant) %>% summarise(`average`=mean(calories))
+
+fastfood %>% group_by(restaurant) %>% summarise(`average_calories`=mean(calories))
+
+fastfood2 <- fastfood %>% group_by(restaurant) %>% summarise(`total fat`= sum(total_fat))
+#Data visualization helps to tell stories by curating data into a form easier to understand, highlighting the trends and outliers. A good visualization tells a story, removing the noise from data and highlighting the useful information
+
+ggplot(data=fastfood2, aes(x=restaurant, y= `total fat`)) + geom_bar(stat="identity")
+
+ggplot(data=fastfood1, aes(x=restaurant, y= `nofobservations`)) + geom_bar(stat="identity")
+
+fastfood %>% group_by(restaurant) %>% summarise(`max fat`=max(total_fat))
+
+fastfood3 <- fastfood %>% filter(restaurant == "Mcdonalds")
+fastfood3
+
+ggplot(data=fastfood3, aes(x=protein, y=sugar)) + geom_point(stat= "identity")
+```
+
+
+
+
